@@ -1,0 +1,31 @@
+{
+    "name": "digitalastronauts/warp",
+    "description": "Simple database layer based on `nette/database` to work effectively with entities.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martin Krizan",
+            "email": "mnohosten@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "nette/database": "^2.4",
+        "symfony/property-access": "^5.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "symfony/var-dumper": "^5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Warp\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Warp\\Tests\\": "tests"
+        }
+    }
+}
