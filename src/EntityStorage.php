@@ -18,24 +18,9 @@ class EntityStorage
 
     public function store(object &$entity): void
     {
-        $data = [];
         $mapping = $this->mappingManager->getMapping($entity);
-        foreach ($mapping->columns as $propertyName=>$column) {
-            /** @var Column $column */
-            $value = $this->getEntityValue($entity, $propertyName);
-            if(!is_scalar($value)) {
-                if(is_object($value) && $value instanceof ValueInterface) {
-                    $value = $value->getValue();
-                }
-                if(is_object($value)) {
-                    $valueMapping = $this->mappingManager->getMapping($value);
-                    if($valueMapping->isEntity()) {
-                        $value = $this->getEntityValue($value, $valueMapping->id->propertyName);
-                    }
-                }
-            }
-            $data[$column->name] = $value;
-        }
+        $data = $this->extractDataFromEntity($mapping, $entity);
+
         $id = $this->getEntityValue($entity, $mapping->id->name);
         if($id) {
             $this->context->table($mapping->table->name)
@@ -69,5 +54,27 @@ class EntityStorage
             $accessor = new PropertyAccessor();
         }
         return $accessor;
+    }
+
+    private function extractDataFromEntity(EntityMapping $mapping, object $entity): array
+    {
+        $data = [];
+        foreach ($mapping->columns as $propertyName => $column) {
+            /** @var Column $column */
+            $value = $this->getEntityValue($entity, $propertyName);
+            if (!is_scalar($value)) {
+                if (is_object($value) && $value instanceof ValueInterface) {
+                    $value = $value->getValue();
+                }
+                if (is_object($value)) {
+                    $valueMapping = $this->mappingManager->getMapping($value);
+                    if ($valueMapping->isEntity()) {
+                        $value = $this->getEntityValue($value, $valueMapping->id->propertyName);
+                    }
+                }
+            }
+            $data[$column->name] = $value;
+        }
+        return $data;
     }
 }
