@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace Warp\Tests\Fixtures\Entity;
 
-use Warp\Entity;
+use Warp\Mapping;
+use Warp\Tests\Fixtures\Entity\Repository\AuthorRepository;
 
-/**
- * @property iterable|Book[] $books
- */
-class Author extends Entity
+#[Mapping\Entity(repositoryClass: AuthorRepository::class)]
+#[Mapping\Table(name: "author")]
+class Author
 {
-    protected static string $tableName = 'author';
-
+    #[Mapping\Id]
+    public int $id = 0;
+    #[Mapping\Column(name: "name", type: "string")]
     public string $name = '';
-    /** @var iterable|Book[] */
-    protected iterable $books;
-
-    protected function getBooks(): iterable
-    {
-        return $this->books;
-    }
+    #[Mapping\OneToMany(targetEntity: Author::class, mappedBy: "author")]
+    /** @var Author[] */
+    public iterable $books = [];
 }

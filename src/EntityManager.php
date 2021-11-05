@@ -60,7 +60,7 @@ class EntityManager
     }
 
 
-    protected function getStorage(Entity $entity): Storage
+    protected function getStorage(Entity $entity): EntityStorage
     {
         $storageClass = $entity::getStorageClass();
         return new $storageClass($this->getContext());
