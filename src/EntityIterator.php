@@ -9,7 +9,6 @@ use Nette\Database\Table\Selection;
 
 class EntityIterator implements Iterator
 {
-
     private Iterator $iterator;
     private Closure $closure;
 
@@ -19,7 +18,7 @@ class EntityIterator implements Iterator
         $this->closure = $closure;
     }
 
-    public function current(): Entity
+    public function current()
     {
         return ($this->closure)($this->iterator->current());
     }

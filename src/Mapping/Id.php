@@ -6,7 +6,7 @@ namespace Warp\Mapping;
 #[\Attribute]
 class Id extends Column
 {
-    public string $propertyName;
+
     public function __construct(
         string $name = 'id'
     )

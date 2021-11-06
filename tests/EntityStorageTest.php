@@ -14,26 +14,30 @@ use Warp\MappingManager;
 use Warp\Tests\Fixtures\ConnectionFactory;
 use Warp\Tests\Fixtures\Entity\Author;
 use Warp\Tests\Fixtures\Entity\Book;
+use Warp\Tests\Fixtures\Entity\Value\AuthorType;
 
 class EntityStorageTest extends TestCase
 {
+    use DatabaseContextTrait;
+
     public function testStore()
     {
         $author = new Author();
-        $author->name = bin2hex(random_bytes(32));
+        $author->setName(bin2hex(random_bytes(32)));
+        $author->setType(new AuthorType(AuthorType::TYPE_EXTERNAL));
 
         $context = $this->getDatabaseContext();
         $storage = new EntityStorage($context, new MappingManager());
         $storage->store($author);
 
         $book = new Book();
-        $book->author = $author;
-        $book->name = bin2hex(random_bytes(32));
-        $book->description = bin2hex(random_bytes(32));
+        $book->setAuthor($author);
+        $book->setName(bin2hex(random_bytes(32)));
+        $book->setDescription(bin2hex(random_bytes(32)));
         $storage->store($book);
 
         $row = $context->table('author')
-            ->where('name', $author->name)
+            ->where('name', $author->getName())
             ->limit(1)
             ->fetch();
         Assert::assertInstanceOf(
@@ -42,29 +46,13 @@ class EntityStorageTest extends TestCase
         );
 
         $row = $context->table('book')
-            ->where('name', $book->name)
+            ->where('name', $book->getName())
             ->limit(1)
             ->fetch();
         Assert::assertInstanceOf(
             ActiveRow::class,
             $row
         );
-    }
-
-    private function getDatabaseContext(): Context
-    {
-        static $context = null;
-        if(!isset($context)) {
-            $connection = ConnectionFactory::create();
-            $context = new Context(
-                $connection,
-                new Structure(
-                    $connection,
-                    new MemoryStorage()
-                )
-            );
-        }
-        return $context;
     }
 
 }

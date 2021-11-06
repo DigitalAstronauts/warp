@@ -69,9 +69,12 @@ class MappingManager
                 switch ($mappingAttribute::class) {
                     case Id::class:
                         $mappingAttribute->propertyName = $property->getName();
+                        $mappingAttribute->propertyType = $property->getType()->getName();
                         $mapping->id = $mappingAttribute;
                         break;
                     case Column::class:
+                        $mappingAttribute->propertyName = $property->getName();
+                        $mappingAttribute->propertyType = $property->getType()->getName();
                         $mapping->columns[$property->getName()] = $mappingAttribute;
                         break;
                     case JoinColumn::class:
@@ -79,11 +82,14 @@ class MappingManager
                         /** @var EntityMapping $joinColumnMapping */
                         $joinColumnMapping = $this->getMapping($property->getType()->getName());
                         $mappingAttribute->referencedTableName = $joinColumnMapping->table->name;
+                        $mappingAttribute->propertyName = $property->getName();
+                        $mappingAttribute->propertyType = $property->getType()->getName();
                         $mapping->columns[$property->getName()] = $mappingAttribute;
                         break;
                     case OneToMany::class:
                     case ManyToOne::class:
                         $mapping->relations[$property->getName()] = $mappingAttribute;
+                        break;
                 }
             }
         }
