@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Warp\Tests;
 
 use PHPUnit\Framework\Assert;
-use Warp\EntityMapping;
 use Warp\EntityRepository;
 use PHPUnit\Framework\TestCase;
 use Warp\EntityStorage;
@@ -47,11 +46,6 @@ class EntityRepositoryTest extends TestCase
         Assert::assertEquals($book->getId(), $testBook->getId());
     }
 
-
-    /**
-     * @return Author
-     * @throws \Exception
-     */
     private function makeTestAuthor(): Author
     {
         $storage = $this->getEntityStorage();
@@ -63,9 +57,6 @@ class EntityRepositoryTest extends TestCase
         return $author;
     }
 
-    /**
-     * @return EntityStorage
-     */
     private function getEntityStorage(): EntityStorage
     {
         $context = $this->getDatabaseContext();

@@ -19,8 +19,8 @@ class Author
     private string $name = '';
     #[Mapping\Column(name: "type", type: "string")]
     private AuthorType $type;
-    #[Mapping\OneToMany(targetEntity: Author::class, mappedBy: "author")]
     /** @var Author[] */
+    #[Mapping\OneToMany(targetEntity: Book::class, mappedBy: "author")]
     private iterable $books = [];
 
     public function getId(): int

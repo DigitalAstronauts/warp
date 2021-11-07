@@ -6,6 +6,7 @@ namespace Warp;
 use Nette\Database\Table\ActiveRow;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Warp\Mapping\JoinColumn;
+use Warp\Mapping\OneToMany;
 
 class EntityHydrator
 {
@@ -47,6 +48,23 @@ class EntityHydrator
                 $this->setEntityProperty($entity, $propertyName, $value);
             } else {
                 $this->setEntityProperty($entity, $propertyName, $row[$column->name]);
+            }
+        }
+        foreach ($entityMapping->relations as $propertyName=>$relation) {
+            if($relation instanceof OneToMany) {
+                $relationMapping = $this->mappingManager->getMapping($relation->targetEntity);
+                $this->setEntityProperty(
+                    $entity,
+                    $propertyName,
+                    new EntityIterator(
+                        $row->related($relationMapping->table->name),
+                        fn(ActiveRow $row) =>
+                            $this->hydrate(
+                                $row,
+                                $relation->targetEntity
+                            )
+                    )
+                );
             }
         }
         return $entity;

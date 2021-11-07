@@ -5,7 +5,6 @@ namespace Warp;
 
 use Closure;
 use Iterator;
-use Nette\Database\Table\Selection;
 
 class EntityIterator implements Iterator
 {

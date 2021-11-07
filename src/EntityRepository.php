@@ -19,6 +19,18 @@ class EntityRepository
         $this->entityMapping = $this->mappingManager->getMapping($this->entityClass);
     }
 
+    public function findOneBy(array $where)
+    {
+        $row = $this->context->table($this->entityMapping->table->name)
+            ->where($where)
+            ->limit(1)
+            ->fetch();
+        return  $this->getHydrator()->hydrate(
+            $row,
+            $this->entityClass
+        );
+    }
+
     public function findOne($id)
     {
         $row = $this->context->table($this->entityMapping->table->name)
