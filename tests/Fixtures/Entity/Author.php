@@ -17,7 +17,7 @@ class Author
     private int $id = 0;
     #[Mapping\Column(name: "name", type: "string")]
     private string $name = '';
-    #[Mapping\Column(name: "type", type: "string")]
+    #[Mapping\Column(name: "type", type: "string", options: ['limit' => 30])]
     private AuthorType $type;
     /** @var Author[] */
     #[Mapping\OneToMany(targetEntity: Book::class, mappedBy: "author")]
