@@ -2,3 +2,4 @@
 vendor
 tests/config.php
 .phpunit.result.cache
+phinx.php
