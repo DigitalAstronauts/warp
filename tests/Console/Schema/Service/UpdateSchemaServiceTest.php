@@ -27,7 +27,7 @@ class UpdateSchemaServiceTest extends TestCase
             $migrationDirectory
         );
         Assert::assertTrue(
-            file_exists($path)
+            file_exists($path) || $path == ''
         );
     }
 

@@ -11,7 +11,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "nette/database": "^2.4",
+        "nette/database": "^3.1",
         "symfony/property-access": "^5.3",
         "robmorgan/phinx": "^0.12.9",
         "nette/php-generator": "*"
