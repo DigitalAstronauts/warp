@@ -15,6 +15,7 @@ class EntityMapping
     public Id $id;
     public array $columns = [];
     public array $relations = [];
+    public array $indexes = [];
 
     public function isEntity(): bool
     {

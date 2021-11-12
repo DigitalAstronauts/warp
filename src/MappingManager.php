@@ -8,6 +8,7 @@ use Nette\Caching\Storages\MemoryStorage;
 use Warp\Mapping\Column;
 use Warp\Mapping\Entity;
 use Warp\Mapping\Id;
+use Warp\Mapping\Index;
 use Warp\Mapping\JoinColumn;
 use Warp\Mapping\ManyToOne;
 use Warp\Mapping\OneToMany;
@@ -90,6 +91,10 @@ class MappingManager
                     case ManyToOne::class:
                         $mapping->relations[$property->getName()] = $mappingAttribute;
                         break;
+                    case Index::class:
+                        $mapping->indexes[] = $mappingAttribute;
+                        break;
+
                 }
             }
         }

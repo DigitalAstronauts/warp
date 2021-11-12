@@ -7,10 +7,13 @@ namespace Warp\Mapping;
 class JoinColumn extends Column
 {
     public string $referencedTableName;
+    public array $options = ['signed' => false];
     public function __construct(
         public string $name,
         public string $referencedColumnName = 'id',
+        array $options = ['signed' => false]
     )
     {
+        $this->options = $options + $this->options;
     }
 }

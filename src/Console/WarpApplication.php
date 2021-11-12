@@ -18,6 +18,4 @@ class WarpApplication extends PhinxApplication
             new UpdateSchema()
         ]);
     }
-
-
 }

@@ -15,7 +15,7 @@ class Book
     #[Mapping\Id]
     private int $id = 0;
     #[Mapping\ManyToOne(inversedBy: "books")]
-    #[Mapping\JoinColumn(name: "author_id")]
+    #[Mapping\JoinColumn(name: "author_id", options: ['update' => 'CASCADE'])]
     private Author $author;
     #[Mapping\Column(name: "name", type: "string")]
     private string $name = '';
