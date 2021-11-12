@@ -29,5 +29,6 @@
         "psr-4": {
             "Warp\\Tests\\": "tests"
         }
-    }
+    },
+    "bin": ["bin/warp"]
 }
