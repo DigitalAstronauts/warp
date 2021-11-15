@@ -19,7 +19,8 @@ class MappingManager
 {
 
     public function __construct(
-        private ?Storage $storage = null
+        private ?Storage $storage = null,
+        private array $config = [],
     )
     {
         if(!isset($this->storage)) {
@@ -27,6 +28,10 @@ class MappingManager
         }
     }
 
+    /**
+     * @param object|string $entity
+     * @return mixed|EntityMapping
+     */
     public function getMapping(object|string $entity)
     {
         $mapping = $this->storage->read(
@@ -100,5 +105,15 @@ class MappingManager
             }
         }
         return $mapping;
+    }
+
+    public function getProxyClassBasePath(): string
+    {
+        return $this->config['proxyClassBasePath'] ?? sys_get_temp_dir();
+    }
+
+    public function getStorage(): ?Storage
+    {
+        return $this->storage;
     }
 }

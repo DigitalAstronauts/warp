@@ -9,7 +9,7 @@ use Warp\EntityRepository;
 class Entity
 {
     public function __construct(
-        public string $proxyClass,
+        public ?string $proxyClass = null,
         public string $repositoryClass = EntityRepository::class,
     )
     {

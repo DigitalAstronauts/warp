@@ -6,7 +6,7 @@ $autoloadFile = match (true) {
     file_exists(__DIR__ . '/../autoload.php') => __DIR__ . '/../autoload.php',
     file_exists(__DIR__ . '/../../autoload.php') => __DIR__ . '/../../autoload.php',
     file_exists(__DIR__ . '/../../../autoload.php') => __DIR__ . '/../../../autoload.php',
-    true => die("There is not defined root for autoloading."),
+    true => die("\nERROR: There is not defined root for autoloading.\n"),
 };
 
 require $autoloadFile;

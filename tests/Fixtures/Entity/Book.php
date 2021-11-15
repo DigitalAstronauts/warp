@@ -8,7 +8,7 @@ use Warp\Mapping;
 use Warp\Tests\Fixtures\Entity\Proxy\BookProxy;
 use Warp\Tests\Fixtures\Entity\Repository\BookRepository;
 
-#[Mapping\Entity(repositoryClass: BookRepository::class, proxyClass: BookProxy::class)]
+#[Mapping\Entity(repositoryClass: BookRepository::class)]
 #[Mapping\Table(name: "book")]
 class Book
 {
