@@ -15,7 +15,8 @@ class EntityManager
     private MappingManager $mappingManager;
     public function __construct(
         private Connection $connection,
-        private Storage $storage
+        private Storage $storage,
+        private array $config = []
     )
     {
         $this->explorer = new Explorer(
@@ -25,7 +26,7 @@ class EntityManager
                 $this->storage
             )
         );
-        $this->mappingManager = new MappingManager($this->storage);
+        $this->mappingManager = new MappingManager($this->storage, $this->config);
     }
 
     public function getExplorer(): Explorer
