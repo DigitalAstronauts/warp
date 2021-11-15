@@ -38,7 +38,11 @@ class UpdateSchemaService
         foreach ($iterator as $info) {
             /** @var $info \SplFileInfo */
             if (is_dir($info->getFilename())) continue;
-            $basename = str_replace('.' . $info->getExtension(), '', $info->getBasename());
+            $basename = str_replace(
+                ['.' . $info->getExtension(), '/'],
+                ['', '\\'],
+                trim(str_replace($entityDir, '', $info->getRealPath()), '/')
+            );
             $className = sprintf('%s\\%s', $entityPrefix, $basename);
             if (class_exists($className)) {
                 $migrationInput = new MigrationInput();
