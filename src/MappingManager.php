@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Warp;
 
 use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Nette\Caching\Storages\MemoryStorage;
 use Warp\Mapping\Column;
 use Warp\Mapping\Entity;
@@ -18,7 +19,7 @@ class MappingManager
 {
 
     public function __construct(
-        private ?IStorage $storage = null
+        private ?Storage $storage = null
     )
     {
         if(!isset($this->storage)) {

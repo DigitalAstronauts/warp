@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Warp;
 
 use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Warp\Mapping\Column;
 
 class EntityStorage
 {
     public function __construct(
-        private Context $context,
+        private Explorer        $explorer,
         private MappingManager $mappingManager
     )
     {
@@ -23,11 +24,11 @@ class EntityStorage
 
         $id = $this->getEntityValue($entity, $mapping->id->name);
         if($id) {
-            $this->context->table($mapping->table->name)
+            $this->explorer->table($mapping->table->name)
                 ->where($mapping->id->name, $id)
                 ->update($data);
         } else {
-            $row = $this->context->table($mapping->table->name)
+            $row = $this->explorer->table($mapping->table->name)
                 ->insert($data);
             $this->getAccessor()->setValue(
                 $entity,
@@ -39,6 +40,11 @@ class EntityStorage
 
     public function delete($entity): void
     {
+        $mapping = $this->mappingManager->getMapping($entity);
+        $id = $this->getEntityValue($entity, $mapping->id->name);
+        $this->explorer->table($mapping->table->name)
+            ->where($mapping->id->name, $id)
+            ->delete();
     }
 
     public function getEntityValue(object $entity, string $propertyName)

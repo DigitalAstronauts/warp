@@ -3,66 +3,80 @@ declare(strict_types=1);
 
 namespace Warp;
 
-use Nette\Caching\Storages\DevNullStorage;
+use Nette\Caching\Storage;
 use Nette\Database\Connection;
+use Nette\Database\Explorer;
 use Nette\Database\Structure;
-use Nette\Database\Context;
 use Throwable;
-use Webmozart\Assert\Assert;
 
 class EntityManager
 {
-    private Context $context;
+    private Explorer $explorer;
+    private MappingManager $mappingManager;
     public function __construct(
-        private Connection $connection
+        private Connection $connection,
+        private Storage $storage
     )
     {
-        $this->context = new Context(
+        $this->explorer = new Explorer(
             $this->connection,
             new Structure(
                 $this->connection,
-                new DevNullStorage()
+                $this->storage
             )
         );
+        $this->mappingManager = new MappingManager($this->storage);
     }
 
-    public function getContext(): Context
+    public function getExplorer(): Explorer
     {
-        return $this->context;
+        return $this->explorer;
     }
 
     public function getRepository(string $entityClass): EntityRepository
     {
-        $repositoryClass = $entityClass::getRepositoryClass();
-        return new $repositoryClass($this->getContext());
+        /** @var EntityMapping $entityMapping */
+        $entityMapping = $this->mappingManager->getMapping($entityClass);
+        $repositoryClass = $entityMapping->entity->repositoryClass;
+        return new $repositoryClass(
+            $this->getExplorer(),
+            $this->mappingManager,
+            $entityClass
+        );
     }
 
-    public function store(Entity &$entity): void
+    public function store(object &$entity): void
     {
         $this->getStorage($entity)->store($entity);
     }
 
-    public function delete(Entity $entity): void
+    public function delete(object $entity): void
     {
-        $this->getStorage($entity)->delete($entity);
+        $this->getStorage()->delete($entity);
     }
 
     public function transaction(callable $function): void
     {
-        $this->getContext()->beginTransaction();
+        $this->getExplorer()->beginTransaction();
         try {
             $function();
-            $this->getContext()->commit();
+            $this->getExplorer()->commit();
         } catch (Throwable $exception) {
-            $this->getContext()->rollBack();
+            $this->getExplorer()->rollBack();
             throw $exception;
         }
     }
 
-
-    protected function getStorage(Entity $entity): EntityStorage
+    private function getStorage(): EntityStorage
     {
-        $storageClass = $entity::getStorageClass();
-        return new $storageClass($this->getContext());
+        static $entityStorage = null;
+        if(!isset($entityStorage)) {
+            $entityStorage = new EntityStorage(
+                $this->explorer,
+                $this->mappingManager
+            );
+        }
+        return $entityStorage;
     }
+
 }
