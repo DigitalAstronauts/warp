@@ -25,10 +25,12 @@ class EntityRepository
             ->where($where)
             ->limit(1)
             ->fetch();
-        return $this->getHydrator()->hydrate(
-            $row,
-            $this->entityClass
-        );
+        return $row
+            ? $this->getHydrator()->hydrate(
+                $row,
+                $this->entityClass
+            )
+            : null;
     }
 
     public function findOne($id)
@@ -38,10 +40,12 @@ class EntityRepository
             ->limit(1)
             ->fetch();
 
-        return $this->getHydrator()->hydrate(
-            $row,
-            $this->entityClass
-        );
+        return $row
+            ? $this->getHydrator()->hydrate(
+                $row,
+                $this->entityClass
+            )
+            : null;
     }
 
     private function getHydrator()
