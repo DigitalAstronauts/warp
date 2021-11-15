@@ -69,8 +69,8 @@ class EntityStorage
             /** @var Column $column */
             $value = $this->getEntityValue($entity, $propertyName);
             if (!is_scalar($value)) {
-                if (is_object($value) && $value instanceof ValueInterface) {
-                    $value = $value->getValue();
+                if (is_object($value) && $value instanceof AbstractValue) {
+                    $value = $value->jsonSerialize();
                 }
                 if (is_object($value)) {
                     $valueMapping = $this->mappingManager->getMapping($value);

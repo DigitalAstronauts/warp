@@ -51,7 +51,7 @@ class EntityHydrator
                     );
                     unset($entity->__lazyProperties__[$propertyName]);
                 };
-            } else if (is_a($column->propertyType, ValueInterface::class, true)) {
+            } else if (is_a($column->propertyType, AbstractValue::class, true)) {
                 $value = new $column->propertyType($row[$column->name]);
                 $this->setEntityProperty($entity, $propertyName, $value);
             } else {

@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Warp\Tests\Fixtures\Entity\Value;
 
 
-use Warp\ValueInterface;
+use Warp\AbstractValue;
 use Webmozart\Assert\Assert;
 
-class AuthorType implements ValueInterface
+class AuthorType extends AbstractValue
 {
     const TYPE_INTERNAL = 'internal';
     const TYPE_EXTERNAL = 'external';
@@ -31,5 +31,4 @@ class AuthorType implements ValueInterface
     {
         return $this->value;
     }
-
 }
