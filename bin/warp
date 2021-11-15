@@ -5,6 +5,7 @@ $autoloadFile = match (true) {
     file_exists(__DIR__ . '/../vendor/autoload.php') => __DIR__ . '/../vendor/autoload.php',
     file_exists(__DIR__ . '/../autoload.php') => __DIR__ . '/../autoload.php',
     file_exists(__DIR__ . '/../../autoload.php') => __DIR__ . '/../../autoload.php',
+    file_exists(__DIR__ . '/../../../autoload.php') => __DIR__ . '/../../../autoload.php',
     true => die("There is not defined root for autoloading."),
 };
 
