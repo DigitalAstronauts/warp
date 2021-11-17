@@ -14,10 +14,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Warp\Console\Schema\Service\UpdateSchemaService;
 use Warp\MappingManager;
 
-class UpdateSchema extends AbstractCommand
+class MakeMigration extends AbstractCommand
 {
-    protected static $defaultName = 'warp:schema-tool:update';
-    protected static $defaultDescription = 'Make migration according defined schema.';
+    protected static $defaultName = 'schema:make-migration';
+    protected static $defaultDescription = 'Generates migration according defined schema.';
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {

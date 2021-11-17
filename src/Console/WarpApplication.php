@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Warp\Console;
 
 use Phinx\Console\PhinxApplication;
-use Warp\Console\Schema\UpdateSchema;
+use Warp\Console\Schema\MakeMigration;
 
 class WarpApplication extends PhinxApplication
 {
@@ -15,7 +15,7 @@ class WarpApplication extends PhinxApplication
         parent::__construct();
         $this->setName('Warp ORM - Console application base on: Phinx by CakePHP');
         $this->addCommands([
-            new UpdateSchema()
+            new MakeMigration()
         ]);
     }
 }
