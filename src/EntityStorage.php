@@ -75,7 +75,6 @@ class EntityStorage
                 }
                 if (is_object($value)) {
                     $valueMapping = $this->mappingManager->getMapping($value);
-                    dump($valueMapping, $value);die;
                     if ($valueMapping->isEntity()) {
                         $value = $this->getEntityValue($value, $valueMapping->id->propertyName);
                     }
