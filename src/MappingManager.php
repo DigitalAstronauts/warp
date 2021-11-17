@@ -34,15 +34,12 @@ class MappingManager
      */
     public function getMapping(object|string $entity)
     {
-        $mapping = $this->storage->read(
-            $this->getMappingKey($entity)
-        );
+        $key = $this->getMappingKey($entity);
+        $mapping = $this->storage->read($key);
         if(is_null($mapping)) {
             $mapping = $this->createMapping($entity);
             $this->storage->write(
-                is_string($entity)
-                    ? $entity
-                    : get_class($entity),
+                $key,
                 $mapping,
                 []
             );
@@ -52,12 +49,17 @@ class MappingManager
 
     private function getMappingKey(object|string $entity): string
     {
-        return (new \ReflectionClass($entity))->getName();
+        $reflectionClass = new \ReflectionClass($entity);
+        $name = $reflectionClass->getName();
+        if(str_ends_with($name, '__WarpProxy')) {
+            return $reflectionClass->getParentClass()->getName();
+        }
+        return $name;
     }
 
     private function createMapping(object|string $entity): EntityMapping
     {
-        $rc = new \ReflectionClass($entity);
+        $rc = new \ReflectionClass($this->getMappingKey($entity));
         $mapping = new EntityMapping();
         foreach ($rc->getAttributes() as $attribute) {
             $mappingAttribute = $attribute->newInstance();

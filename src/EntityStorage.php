@@ -5,6 +5,7 @@ namespace Warp;
 
 use Nette\Database\Context;
 use Nette\Database\Explorer;
+use Proxima\Entity\Attribute\AttributeGroup;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Warp\Mapping\Column;
 
@@ -74,6 +75,7 @@ class EntityStorage
                 }
                 if (is_object($value)) {
                     $valueMapping = $this->mappingManager->getMapping($value);
+                    dump($valueMapping, $value);die;
                     if ($valueMapping->isEntity()) {
                         $value = $this->getEntityValue($value, $valueMapping->id->propertyName);
                     }
