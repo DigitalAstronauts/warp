@@ -59,7 +59,8 @@ class MappingManager
 
     private function createMapping(object|string $entity): EntityMapping
     {
-        $rc = new \ReflectionClass($this->getMappingKey($entity));
+        $mappingKey = $this->mappingKey($entity);
+        $rc = new \ReflectionClass($mappingKey);
         $mapping = new EntityMapping();
         foreach ($rc->getAttributes() as $attribute) {
             $mappingAttribute = $attribute->newInstance();
@@ -89,7 +90,11 @@ class MappingManager
                     case JoinColumn::class:
                         /** @var JoinColumn $mappingAttribute */
                         /** @var EntityMapping $joinColumnMapping */
-                        $joinColumnMapping = $this->getMapping($property->getType()->getName());
+                        if($property->getType()->getName() == $mappingKey) {
+                            $joinColumnMapping = $mapping;
+                        } else {
+                            $joinColumnMapping = $this->getMapping($property->getType()->getName());
+                        }
                         $mappingAttribute->referencedTableName = $joinColumnMapping->table->name;
                         $mappingAttribute->propertyName = $property->getName();
                         $mappingAttribute->propertyType = $property->getType()->getName();
@@ -117,5 +122,14 @@ class MappingManager
     public function getStorage(): ?Storage
     {
         return $this->storage;
+    }
+
+    /**
+     * @param object|string $entity
+     * @return string
+     */
+    private function mappingKey(object|string $entity): string
+    {
+        return $this->getMappingKey($entity);
     }
 }
