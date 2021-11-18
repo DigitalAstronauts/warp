@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Warp;
 
 use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 
 class EntityRepository
 {
@@ -46,6 +47,25 @@ class EntityRepository
                 $this->entityClass
             )
             : null;
+    }
+
+    public function find(array $where = []): EntityIterator
+    {
+        $selection = $this->explorer->table($this->entityMapping->table->name);
+        if($where) $selection->where($where);
+
+         return new EntityIterator(
+             $selection,
+             fn(ActiveRow $row) => $this->getHydrator()->hydrate(
+                 $row,
+                 $this->entityClass
+             )
+         );
+    }
+
+    public function all(): EntityIterator
+    {
+        return $this->find();
     }
 
     private function getHydrator()
