@@ -52,17 +52,19 @@ MTHD;
                 if (method_exists($entityClass, $methodName)) {
                     $reflectionMethod = new \ReflectionMethod($entityClass, $methodName);
                     $method = $class->addMethod($methodName);
+                    $parameters = [];
                     foreach ($reflectionMethod->getParameters() as $parameter) {
+                        $parameters[] = $parameter->getName();
                         $method->addParameter($parameter->getName())
                             ->setType($parameter->getType()->getName())
                             ->setNullable($parameter->allowsNull());
                     }
                     $methodBody = <<<MTHD
 \$this->unsetInitializationOfProperty(?);
-parent::?();
+parent::?(?);
 return;
 MTHD;
-                    $method->addBody($methodBody, [$column->propertyName, $methodName]);
+                    $method->addBody($methodBody, [$column->propertyName, $methodName, ...$parameters]);
 
                     if($reflectionMethod->getReturnType()->getName() == 'void') {
                         $method->setReturnType('void');
