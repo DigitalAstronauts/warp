@@ -42,7 +42,9 @@ return parent::?();
 MTHD;
                     $method->addBody($methodBody, [$column->propertyName, $methodName]);
                     $reflectionMethod = new \ReflectionMethod($entityClass, $methodName);
-                    $method->setReturnType($reflectionMethod->getReturnType()->getName());
+                    $nullable = $reflectionMethod->getReturnType()->allowsNull();
+                    $method->setReturnType($reflectionMethod->getReturnType()->getName())
+                        ->setReturnNullable($nullable);
                 }
             }
         }
