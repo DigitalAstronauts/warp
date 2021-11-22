@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Warp;
 
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Parameter;
 use Warp\Mapping\JoinColumn;
 
@@ -55,7 +56,7 @@ MTHD;
                     $method = $class->addMethod($methodName);
                     $parameters = [];
                     foreach ($reflectionMethod->getParameters() as $parameter) {
-                        $parameters[] = (new Parameter($parameter->getName()));
+                        $parameters[] = new Literal('$'.$parameter->getName());
                         $method->addParameter($parameter->getName())
                             ->setType($parameter->getType()->getName())
                             ->setNullable($parameter->allowsNull());
