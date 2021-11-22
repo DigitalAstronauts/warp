@@ -23,7 +23,7 @@ class EntityHydrator
     }
 
     public function hydrate(
-        ActiveRow $row,
+        ?ActiveRow $row,
         string    $entityClass
     )
     {
