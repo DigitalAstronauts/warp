@@ -55,16 +55,16 @@ MTHD;
                     $method = $class->addMethod($methodName);
                     $parameters = [];
                     foreach ($reflectionMethod->getParameters() as $parameter) {
-                        $parameters[] = new Parameter($parameter->getName());
+                        $parameters[] = (new Parameter($parameter->getName()));
                         $method->addParameter($parameter->getName())
                             ->setType($parameter->getType()->getName())
                             ->setNullable($parameter->allowsNull());
                     }
                     $methodBody = <<<MTHD
 \$this->unsetInitializationOfProperty(?);
-parent::?(?);
+parent::?(...?);
 MTHD;
-                    $method->addBody($methodBody, [$column->propertyName, $methodName, ...$parameters]);
+                    $method->addBody($methodBody, [$column->propertyName, $methodName, $parameters]);
 
                     if($reflectionMethod->getReturnType()->getName() == 'void') {
                         $method->setReturnType('void');
