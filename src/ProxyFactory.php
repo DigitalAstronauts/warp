@@ -33,6 +33,7 @@ class ProxyFactory
 
         foreach ($entityMapping->columns as $column) {
             if ($column instanceof JoinColumn) {
+                // getter
                 $methodName = 'get' . ucfirst($column->propertyName);
                 if (method_exists($entityClass, $methodName)) {
                     $method = $class->addMethod($methodName);
@@ -45,6 +46,31 @@ MTHD;
                     $nullable = $reflectionMethod->getReturnType()->allowsNull();
                     $method->setReturnType($reflectionMethod->getReturnType()->getName())
                         ->setReturnNullable($nullable);
+                }
+                // setter
+                $methodName = 'set' . ucfirst($column->propertyName);
+                if (method_exists($entityClass, $methodName)) {
+                    $reflectionMethod = new \ReflectionMethod($entityClass, $methodName);
+                    $method = $class->addMethod($methodName);
+                    foreach ($reflectionMethod->getParameters() as $parameter) {
+                        $method->addParameter($parameter->getName())
+                            ->setType($parameter->getType()->getName())
+                            ->setNullable($parameter->allowsNull());
+                    }
+                    $methodBody = <<<MTHD
+\$this->unsetInitializationOfProperty(?);
+parent::?();
+return;
+MTHD;
+                    $method->addBody($methodBody, [$column->propertyName, $methodName]);
+
+                    if($reflectionMethod->getReturnType()->getName() == 'void') {
+                        $method->setReturnType('void');
+                    } else {
+                        $nullable = $reflectionMethod->getReturnType()->allowsNull();
+                        $method->setReturnType($reflectionMethod->getReturnType()->getName())
+                            ->setReturnNullable($nullable);
+                    }
                 }
             }
         }
