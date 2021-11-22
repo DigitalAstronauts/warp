@@ -41,14 +41,17 @@ class EntityHydrator
             if ($entityMapping->isRelation($propertyName)) {
                 /** @var JoinColumn $column */
                 $entity->__lazyProperties__[$propertyName] = function () use ($entity, $propertyName, $row, $column) {
-                    $this->setEntityProperty(
-                        $entity,
-                        $propertyName,
-                        $this->hydrate(
-                            $row->ref($column->referencedTableName, $column->name),
-                            $column->propertyType
-                        )
-                    );
+                    $ref = $row->ref($column->referencedTableName, $column->name);
+                    if(!is_null($ref)) {
+                        $this->setEntityProperty(
+                            $entity,
+                            $propertyName,
+                            $this->hydrate(
+                                $ref,
+                                $column->propertyType
+                            )
+                        );
+                    }
                     unset($entity->__lazyProperties__[$propertyName]);
                 };
             } else if (is_a($column->propertyType, AbstractValue::class, true)) {
