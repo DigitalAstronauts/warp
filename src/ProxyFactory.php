@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Warp;
 
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\Parameter;
 use Warp\Mapping\JoinColumn;
 
 class ProxyFactory
@@ -54,7 +55,7 @@ MTHD;
                     $method = $class->addMethod($methodName);
                     $parameters = [];
                     foreach ($reflectionMethod->getParameters() as $parameter) {
-                        $parameters[] = $parameter->getName();
+                        $parameters[] = new Parameter($parameter->getName());
                         $method->addParameter($parameter->getName())
                             ->setType($parameter->getType()->getName())
                             ->setNullable($parameter->allowsNull());
@@ -62,7 +63,6 @@ MTHD;
                     $methodBody = <<<MTHD
 \$this->unsetInitializationOfProperty(?);
 parent::?(?);
-return;
 MTHD;
                     $method->addBody($methodBody, [$column->propertyName, $methodName, ...$parameters]);
 
