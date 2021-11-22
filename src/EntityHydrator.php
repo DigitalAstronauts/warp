@@ -35,7 +35,7 @@ class EntityHydrator
         $this->setEntityProperty(
             $entity,
             $entityMapping->id->propertyName,
-            $row[$entityMapping->id->name]
+            $row[$entityMapping->id->name] ?? null
         );
         foreach ($entityMapping->columns as $propertyName => $column) {
             if ($entityMapping->isRelation($propertyName)) {
