@@ -87,11 +87,11 @@ class UpdateSchemaService
         }
     }
 
-    private function hasIndex($table, string $name): bool
+    private function hasIndex(string $table, string|array $name): bool
     {
         try {
-            if(is_array($table)) {
-                $table = implode('_', $table);
+            if(is_array($name)) {
+                $name = implode('_', $name);
             }
             $indexes = $this->context->getConnection()
                 ->query('SHOW INDEX FROM ' . $table)
