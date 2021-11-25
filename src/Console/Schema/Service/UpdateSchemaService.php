@@ -87,7 +87,7 @@ class UpdateSchemaService
         }
     }
 
-    private function hasIndex(string|array $table, string $name): bool
+    private function hasIndex($table, string $name): bool
     {
         try {
             if(is_array($table)) {
