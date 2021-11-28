@@ -38,7 +38,7 @@ class MakeMigration extends AbstractCommand
             $output->writeln('There is no migration to create.');
         }
 
-        return self::SUCCESS;
+        return 0;
     }
 
     private function getService(): UpdateSchemaService
