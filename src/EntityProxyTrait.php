@@ -12,4 +12,11 @@ trait EntityProxyTrait
             $this->__lazyProperties__[$propertyName]();
         }
     }
+
+    private function unsetInitializationOfProperty(string $propertyName): void
+    {
+        if (isset($this->__lazyProperties__[$propertyName])) {
+            unset($this->__lazyProperties__[$propertyName]);
+        }
+    }
 }

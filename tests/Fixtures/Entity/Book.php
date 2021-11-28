@@ -17,10 +17,23 @@ class Book
     #[Mapping\ManyToOne(inversedBy: "books")]
     #[Mapping\JoinColumn(name: "author_id", options: ['update' => 'CASCADE'])]
     private Author $author;
+    #[Mapping\ManyToOne]
+    #[Mapping\JoinColumn(name: "parent_id", referencedColumnName: "id")]
+    private ?Book $parent = null;
     #[Mapping\Column(name: "name", type: "string")]
     private string $name = '';
     #[Mapping\Column(name: "description", type: "text", options: ["limit" => Mapping\Option\StringType::LONG_TEXT])]
     private string $description = '';
+
+    public function getParent(): ?Book
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?Book $parent): void
+    {
+        $this->parent = $parent;
+    }
 
     public function getId(): int
     {

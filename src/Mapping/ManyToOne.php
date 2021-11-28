@@ -6,7 +6,7 @@ namespace Warp\Mapping;
 class ManyToOne
 {
     public function __construct(
-        public string $inversedBy
+        public string $inversedBy = ''
     )
     {
     }
