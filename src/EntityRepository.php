@@ -49,11 +49,11 @@ class EntityRepository
             : null;
     }
 
-    public function find(array $where = []): EntityIterator
+    public function find(array $where = [], string $sort = ''): EntityIterator
     {
         $selection = $this->explorer->table($this->entityMapping->table->name);
         if($where) $selection->where($where);
-
+        if($sort) $selection->order($sort);
          return new EntityIterator(
              $selection,
              fn(ActiveRow $row) => $this->getHydrator()->hydrate(
