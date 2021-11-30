@@ -91,7 +91,7 @@ class UpdateSchemaService
     {
         try {
             if(is_array($name)) {
-                $name = implode('_', $name);
+                $name = $name[0];
             }
             $indexes = $this->context->getConnection()
                 ->query('SHOW INDEX FROM ' . $table)
