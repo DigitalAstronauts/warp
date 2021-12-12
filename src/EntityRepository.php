@@ -49,11 +49,17 @@ class EntityRepository
             : null;
     }
 
-    public function find(array $where = [], string $sort = ''): EntityIterator
+    public function find(
+        array $where = [],
+        string $sort = '',
+        int $limit = 0,
+        int $offset = 0,
+    ): EntityIterator
     {
         $selection = $this->explorer->table($this->entityMapping->table->name);
         if($where) $selection->where($where);
         if($sort) $selection->order($sort);
+        if($limit) $selection->limit($limit, $offset);
          return new EntityIterator(
              $selection,
              fn(ActiveRow $row) => $this->getHydrator()->hydrate(
