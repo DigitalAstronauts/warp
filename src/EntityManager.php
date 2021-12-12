@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Warp;
 
+use League\Event\EventDispatcher;
 use Nette\Caching\Storage;
 use Nette\Database\Connection;
 use Nette\Database\Explorer;
@@ -13,6 +14,8 @@ class EntityManager
 {
     private Explorer $explorer;
     private MappingManager $mappingManager;
+    private EventDispatcher $eventDispatcher;
+
     public function __construct(
         private Connection $connection,
         private Storage $storage,
@@ -27,6 +30,11 @@ class EntityManager
             )
         );
         $this->mappingManager = new MappingManager($this->storage, $this->config);
+    }
+
+    public function withEventDispatcher(EventDispatcher $eventDispatcher): void
+    {
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function getExplorer(): Explorer
@@ -48,7 +56,7 @@ class EntityManager
 
     public function store(object &$entity): void
     {
-        $this->getStorage($entity)->store($entity);
+        $this->getStorage()->store($entity);
     }
 
     public function delete(object $entity): void
@@ -74,7 +82,8 @@ class EntityManager
         if(!isset($entityStorage)) {
             $entityStorage = new EntityStorage(
                 $this->explorer,
-                $this->mappingManager
+                $this->mappingManager,
+                $this->eventDispatcher ?? null
             );
         }
         return $entityStorage;

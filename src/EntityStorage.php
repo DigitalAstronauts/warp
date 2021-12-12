@@ -3,17 +3,19 @@ declare(strict_types=1);
 
 namespace Warp;
 
-use Nette\Database\Context;
+use League\Event\EventDispatcher;
 use Nette\Database\Explorer;
 use Proxima\Entity\Attribute\AttributeGroup;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Warp\Event\Event;
 use Warp\Mapping\Column;
 
 class EntityStorage
 {
     public function __construct(
         private Explorer        $explorer,
-        private MappingManager $mappingManager
+        private MappingManager $mappingManager,
+        private ?EventDispatcher $eventDispatcher = null
     )
     {
     }
@@ -28,6 +30,10 @@ class EntityStorage
             $this->explorer->table($mapping->table->name)
                 ->where($mapping->id->name, $id)
                 ->update($data);
+            $this->eventDispatcher?->dispatch(new Event(
+                Event::update(get_class($entity)),
+                $entity
+            ));
         } else {
             $row = $this->explorer->table($mapping->table->name)
                 ->insert($data);
@@ -36,7 +42,15 @@ class EntityStorage
                 $mapping->id->name,
                 $this->getEntityValue($row, $mapping->id->propertyName)
             );
+            $this->eventDispatcher?->dispatch(new Event(
+                Event::insert(get_class($entity)),
+                $entity
+            ));
         }
+        $this->eventDispatcher?->dispatch(new Event(
+            Event::store(get_class($entity)),
+            $entity
+        ));
     }
 
     public function delete($entity): void
@@ -46,6 +60,10 @@ class EntityStorage
         $this->explorer->table($mapping->table->name)
             ->where($mapping->id->name, $id)
             ->delete();
+        $this->eventDispatcher?->dispatch(new Event(
+            Event::delete(get_class($entity)),
+            $entity
+        ));
     }
 
     public function getEntityValue(object $entity, string $propertyName)
