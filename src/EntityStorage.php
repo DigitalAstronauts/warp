@@ -68,7 +68,7 @@ class EntityStorage
 
     private function getClassName(object $entity): string
     {
-        $class = get_class();
+        $class = get_class($entity);
         if(method_exists($entity, '__isProxyClass') && $entity->__isProxyClass()) {
             $class = get_parent_class($class);
         }
