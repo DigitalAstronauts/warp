@@ -31,7 +31,7 @@ class EntityStorage
                 ->where($mapping->id->name, $id)
                 ->update($data);
             $this->eventDispatcher?->dispatch(new Event(
-                Event::update(get_class($entity)),
+                Event::update($this->getClassName($entity)),
                 $entity
             ));
         } else {
@@ -43,12 +43,12 @@ class EntityStorage
                 $this->getEntityValue($row, $mapping->id->propertyName)
             );
             $this->eventDispatcher?->dispatch(new Event(
-                Event::insert(get_class($entity)),
+                Event::insert($this->getClassName($entity)),
                 $entity
             ));
         }
         $this->eventDispatcher?->dispatch(new Event(
-            Event::store(get_class($entity)),
+            Event::store($this->getClassName($entity)),
             $entity
         ));
     }
@@ -61,9 +61,18 @@ class EntityStorage
             ->where($mapping->id->name, $id)
             ->delete();
         $this->eventDispatcher?->dispatch(new Event(
-            Event::delete(get_class($entity)),
+            Event::delete($this->getClassName($entity)),
             $entity
         ));
+    }
+
+    private function getClassName(object $entity): string
+    {
+        $class = get_class();
+        if(method_exists($entity, '__isProxyClass') && $entity->__isProxyClass()) {
+            $class = get_parent_class($class);
+        }
+        return $class;
     }
 
     public function getEntityValue(object $entity, string $propertyName)

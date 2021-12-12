@@ -33,6 +33,10 @@ class ProxyFactory
         $class->setExtends($entityClass);
         $class->addTrait(EntityProxyTrait::class);
 
+        $method = $class->addMethod('__isProxyClass');
+        $method->setPublic();
+        $method->addBody('return true;');
+
         foreach ($entityMapping->columns as $column) {
             if ($column instanceof JoinColumn) {
                 // getter
