@@ -18,6 +18,7 @@ class EntityHydratorTest extends TestCase
     use DatabaseContextTrait;
     public function testHydrate(): void
     {
+        $this->prepareRow();
         $row = $this->getDatabaseContext()->table('book')->limit(1)->fetch();
         $hydrator = new EntityHydrator(new MappingManager());
         /** @var Book $book */
@@ -56,6 +57,26 @@ class EntityHydratorTest extends TestCase
                 $authorBook
             );
         }
+    }
+
+    private function prepareRow(): void
+    {
+        $author = $this->getDatabaseContext()->table('author')->insert([
+            'name' => bin2hex(random_bytes(16)),
+            'type' => mt_rand(0, 1) ? 'internal' : 'external',
+        ]);
+        $this->getDatabaseContext()->table('book')->insert([
+            'author_id' => $author['id'],
+            'parent_id' => null,
+            'name' => bin2hex(random_bytes(16)),
+            'description' => implode(
+                ' ',
+                array_map(
+                    fn() => bin2hex(random_bytes(mt_rand(1, 8))),
+                    range(20, mt_rand(20, 100))
+                )
+            ),
+        ]);
     }
 
 }
